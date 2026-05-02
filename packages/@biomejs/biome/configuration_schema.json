@@ -4254,6 +4254,13 @@
 			]
 		},
 		"NoReExportAllOptions": { "type": "object", "additionalProperties": false },
+		"NoReactDepsConfiguration": {
+			"oneOf": [
+				{ "$ref": "#/$defs/RulePlainConfiguration" },
+				{ "$ref": "#/$defs/RuleWithNoReactDepsOptions" }
+			]
+		},
+		"NoReactDepsOptions": { "type": "object", "additionalProperties": false },
 		"NoReactForwardRefConfiguration": {
 			"oneOf": [
 				{ "$ref": "#/$defs/RulePlainConfiguration" },
@@ -5590,6 +5597,13 @@
 					"description": "Disallow the use of the deprecated __proto__ object property.\nSee https://biomejs.dev/linter/rules/no-proto",
 					"anyOf": [
 						{ "$ref": "#/$defs/NoProtoConfiguration" },
+						{ "type": "null" }
+					]
+				},
+				"noReactDeps": {
+					"description": "Disallow usage of dependency arrays in createEffect and createMemo.\nSee https://biomejs.dev/linter/rules/no-react-deps",
+					"anyOf": [
+						{ "$ref": "#/$defs/NoReactDepsConfiguration" },
 						{ "type": "null" }
 					]
 				},
@@ -8152,6 +8166,16 @@
 			"properties": {
 				"level": { "$ref": "#/$defs/RulePlainConfiguration" },
 				"options": { "$ref": "#/$defs/NoReExportAllOptions" }
+			},
+			"additionalProperties": false,
+			"required": ["level"]
+		},
+		"RuleWithNoReactDepsOptions": {
+			"type": "object",
+			"properties": {
+				"fix": { "anyOf": [{ "$ref": "#/$defs/FixKind" }, { "type": "null" }] },
+				"level": { "$ref": "#/$defs/RulePlainConfiguration" },
+				"options": { "$ref": "#/$defs/NoReactDepsOptions" }
 			},
 			"additionalProperties": false,
 			"required": ["level"]

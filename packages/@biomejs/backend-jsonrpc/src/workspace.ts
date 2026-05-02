@@ -2024,6 +2024,11 @@ See https://biomejs.dev/linter/rules/no-proto
 	 */
 	noProto?: NoProtoConfiguration;
 	/**
+	* Disallow usage of dependency arrays in createEffect and createMemo.
+See https://biomejs.dev/linter/rules/no-react-deps 
+	 */
+	noReactDeps?: NoReactDepsConfiguration;
+	/**
 	* Replaces usages of forwardRef with passing ref as a prop.
 See https://biomejs.dev/linter/rules/no-react-forward-ref 
 	 */
@@ -3855,6 +3860,9 @@ export type NoParametersOnlyUsedInRecursionConfiguration =
 export type NoProtoConfiguration =
 	| RulePlainConfiguration
 	| RuleWithNoProtoOptions;
+export type NoReactDepsConfiguration =
+	| RulePlainConfiguration
+	| RuleWithNoReactDepsOptions;
 export type NoReactForwardRefConfiguration =
 	| RulePlainConfiguration
 	| RuleWithNoReactForwardRefOptions;
@@ -5402,6 +5410,11 @@ export interface RuleWithNoProtoOptions {
 	level: RulePlainConfiguration;
 	options?: NoProtoOptions;
 }
+export interface RuleWithNoReactDepsOptions {
+	fix?: FixKind;
+	level: RulePlainConfiguration;
+	options?: NoReactDepsOptions;
+}
 export interface RuleWithNoReactForwardRefOptions {
 	fix?: FixKind;
 	level: RulePlainConfiguration;
@@ -6841,6 +6854,7 @@ export type NoMultiStrOptions = {};
 export type NoNextAsyncClientComponentOptions = {};
 export type NoParametersOnlyUsedInRecursionOptions = {};
 export type NoProtoOptions = {};
+export type NoReactDepsOptions = {};
 export type NoReactForwardRefOptions = {};
 export type NoReturnAssignOptions = {};
 export interface NoRootTypeOptions {
@@ -7753,12 +7767,12 @@ export type Category =
 	| "lint/nursery/noLeakedRender"
 	| "lint/nursery/noMissingGenericFamilyKeyword"
 	| "lint/nursery/noMisusedPromises"
-	| "lint/nursery/useConsistentEnumValueType"
 	| "lint/nursery/noMultiAssign"
 	| "lint/nursery/noMultiStr"
 	| "lint/nursery/noNextAsyncClientComponent"
 	| "lint/nursery/noParametersOnlyUsedInRecursion"
 	| "lint/nursery/noProto"
+	| "lint/nursery/noReactDeps"
 	| "lint/nursery/noReactForwardRef"
 	| "lint/nursery/noReturnAssign"
 	| "lint/nursery/noRootType"
@@ -7786,6 +7800,7 @@ export type Category =
 	| "lint/nursery/useAwaitThenable"
 	| "lint/nursery/useBiomeSuppressionComment"
 	| "lint/nursery/useConsistentArrowReturn"
+	| "lint/nursery/useConsistentEnumValueType"
 	| "lint/nursery/useConsistentGraphqlDescriptions"
 	| "lint/nursery/useConsistentObjectDefinition"
 	| "lint/nursery/useDeprecatedDate"
@@ -7798,9 +7813,9 @@ export type Category =
 	| "lint/nursery/useImportRestrictions"
 	| "lint/nursery/useInlineScriptId"
 	| "lint/nursery/useJsxCurlyBraceConvention"
+	| "lint/nursery/useLoneAnonymousOperation"
 	| "lint/nursery/useLoneExecutableDefinition"
 	| "lint/nursery/useMaxParams"
-	| "lint/nursery/useLoneAnonymousOperation"
 	| "lint/nursery/useQwikMethodUsage"
 	| "lint/nursery/useQwikValidLexicalScope"
 	| "lint/nursery/useRegexpExec"

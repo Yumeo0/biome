@@ -1,0 +1,215 @@
+---
+source: crates/biome_js_analyze/tests/spec_tests.rs
+expression: invalid.js
+---
+# Input
+```js
+/* should generate diagnostics */
+import { createEffect, createMemo } from "solid-js";
+
+createEffect(() => {
+	console.log(signal());
+}, [signal()]);
+
+createEffect(() => {
+	console.log(signal());
+}, [signal]);
+
+{
+	const deps = [signal];
+	createEffect(() => {
+		console.log(signal());
+	}, deps);
+}
+
+const value1 = createMemo(() => computeExpensiveValue(a(), b()), [a(), b()]);
+
+const value2 = createMemo(() => computeExpensiveValue(a(), b()), [a, b]);
+
+const value3 = createMemo(() => computeExpensiveValue(a(), b()), [a, b()]);
+
+{
+	const deps = [a, b];
+	const value = createMemo(() => computeExpensiveValue(a(), b()), deps);
+}
+
+{
+	const deps = [a, b];
+	const memoFn = () => computeExpensiveValue(a(), b());
+	const value = createMemo(memoFn, deps);
+}
+
+```
+
+# Diagnostics
+```
+invalid.js:6:4 lint/nursery/noReactDeps  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Dependency arrays have no effect in createEffect.
+  
+    4 │ createEffect(() => {
+    5 │ 	console.log(signal());
+  > 6 │ }, [signal()]);
+      │    ^^^^^^^^^^
+    7 │ 
+    8 │ createEffect(() => {
+  
+  i Solid tracks reactive dependencies automatically. The second argument is used as the initial value passed to the function, not as a dependency list.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Unsafe fix: Remove the dependency array.
+  
+    6 │ },·[signal()]);
+      │  ------------  
+
+```
+
+```
+invalid.js:10:4 lint/nursery/noReactDeps  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Dependency arrays have no effect in createEffect.
+  
+     8 │ createEffect(() => {
+     9 │ 	console.log(signal());
+  > 10 │ }, [signal]);
+       │    ^^^^^^^^
+    11 │ 
+    12 │ {
+  
+  i Solid tracks reactive dependencies automatically. The second argument is used as the initial value passed to the function, not as a dependency list.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Unsafe fix: Remove the dependency array.
+  
+    10 │ },·[signal]);
+       │  ----------  
+
+```
+
+```
+invalid.js:16:5 lint/nursery/noReactDeps ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Dependency arrays have no effect in createEffect.
+  
+    14 │ 	createEffect(() => {
+    15 │ 		console.log(signal());
+  > 16 │ 	}, deps);
+       │ 	   ^^^^
+    17 │ }
+    18 │ 
+  
+  i Solid tracks reactive dependencies automatically. The second argument is used as the initial value passed to the function, not as a dependency list.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+
+```
+
+```
+invalid.js:19:66 lint/nursery/noReactDeps  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Dependency arrays have no effect in createMemo.
+  
+    17 │ }
+    18 │ 
+  > 19 │ const value1 = createMemo(() => computeExpensiveValue(a(), b()), [a(), b()]);
+       │                                                                  ^^^^^^^^^^
+    20 │ 
+    21 │ const value2 = createMemo(() => computeExpensiveValue(a(), b()), [a, b]);
+  
+  i Solid tracks reactive dependencies automatically. The second argument is used as the initial value passed to the function, not as a dependency list.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Unsafe fix: Remove the dependency array.
+  
+    19 │ const·value1·=·createMemo(()·=>·computeExpensiveValue(a(),·b()),·[a(),·b()]);
+       │                                                                ------------  
+
+```
+
+```
+invalid.js:21:66 lint/nursery/noReactDeps  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Dependency arrays have no effect in createMemo.
+  
+    19 │ const value1 = createMemo(() => computeExpensiveValue(a(), b()), [a(), b()]);
+    20 │ 
+  > 21 │ const value2 = createMemo(() => computeExpensiveValue(a(), b()), [a, b]);
+       │                                                                  ^^^^^^
+    22 │ 
+    23 │ const value3 = createMemo(() => computeExpensiveValue(a(), b()), [a, b()]);
+  
+  i Solid tracks reactive dependencies automatically. The second argument is used as the initial value passed to the function, not as a dependency list.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Unsafe fix: Remove the dependency array.
+  
+    21 │ const·value2·=·createMemo(()·=>·computeExpensiveValue(a(),·b()),·[a,·b]);
+       │                                                                --------  
+
+```
+
+```
+invalid.js:23:66 lint/nursery/noReactDeps  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Dependency arrays have no effect in createMemo.
+  
+    21 │ const value2 = createMemo(() => computeExpensiveValue(a(), b()), [a, b]);
+    22 │ 
+  > 23 │ const value3 = createMemo(() => computeExpensiveValue(a(), b()), [a, b()]);
+       │                                                                  ^^^^^^^^
+    24 │ 
+    25 │ {
+  
+  i Solid tracks reactive dependencies automatically. The second argument is used as the initial value passed to the function, not as a dependency list.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Unsafe fix: Remove the dependency array.
+  
+    23 │ const·value3·=·createMemo(()·=>·computeExpensiveValue(a(),·b()),·[a,·b()]);
+       │                                                                ----------  
+
+```
+
+```
+invalid.js:27:66 lint/nursery/noReactDeps ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Dependency arrays have no effect in createMemo.
+  
+    25 │ {
+    26 │ 	const deps = [a, b];
+  > 27 │ 	const value = createMemo(() => computeExpensiveValue(a(), b()), deps);
+       │ 	                                                                ^^^^
+    28 │ }
+    29 │ 
+  
+  i Solid tracks reactive dependencies automatically. The second argument is used as the initial value passed to the function, not as a dependency list.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+
+```
+
+```
+invalid.js:33:35 lint/nursery/noReactDeps ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Dependency arrays have no effect in createMemo.
+  
+    31 │ 	const deps = [a, b];
+    32 │ 	const memoFn = () => computeExpensiveValue(a(), b());
+  > 33 │ 	const value = createMemo(memoFn, deps);
+       │ 	                                 ^^^^
+    34 │ }
+    35 │ 
+  
+  i Solid tracks reactive dependencies automatically. The second argument is used as the initial value passed to the function, not as a dependency list.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+
+```
